@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Req } from '@nestjs/common';
-import { Request } from 'express';
+import type { Request } from 'express';
 import { CreateLeadDto } from './dto/create-lead.dto';
 
 @Controller('leads')
