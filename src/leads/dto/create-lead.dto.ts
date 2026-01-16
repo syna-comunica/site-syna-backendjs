@@ -2,22 +2,22 @@ import { IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-vali
 
 export class CreateLeadDto {
   @IsString()
-  @IsNotEmpty({ message: 'Nome é obrigatório' })
-  @MaxLength(80, { message: 'Nome muito longo (máx 80)' })
-  name!: string;
+  @IsNotEmpty()
+  @MaxLength(120)
+  name: string;
 
-  @IsEmail({}, { message: 'Email inválido' })
-  @IsNotEmpty({ message: 'Email é obrigatório' })
-  @MaxLength(120, { message: 'Email muito longo (máx 120)' })
-  email!: string;
+  @IsEmail()
+  @IsNotEmpty()
+  @MaxLength(180)
+  email: string;
 
-  @IsOptional()
   @IsString()
-  @MaxLength(120, { message: 'Empresa muito longa (máx 120)' })
+  @IsOptional()
+  @MaxLength(120)
   company?: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Mensagem é obrigatória' })
-  @MaxLength(2000, { message: 'Mensagem muito longa (máx 2000)' })
-  message!: string;
+  @IsNotEmpty()
+  @MaxLength(2000)
+  message: string;
 }
