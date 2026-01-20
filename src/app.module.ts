@@ -2,12 +2,14 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LeadsModule } from './leads/leads.module';
+import { AuthModule } from './auth/auth.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: ['.env', '.env.production'],
     }),
 
     TypeOrmModule.forRootAsync({
@@ -18,21 +20,22 @@ import { LeadsModule } from './leads/leads.module';
         host: config.get<string>('DB_HOST'),
         port: Number(config.get<string>('DB_PORT')),
         username: config.get<string>('DB_USERNAME'),
-        password: config.get<string>('DB_PASSWORD') || undefined,
+        password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
 
-        // ✅ Modelo 1
         autoLoadEntities: true,
 
-        // ✅ DEV only
+        // ✅ TEMPORÁRIO: liga só pra recriar tabelas
         synchronize: true,
 
-        // ✅ Deixe true agora pra diagnosticar (depois você pode desligar)
+        // ✅ útil pra validar se conectou no banco certo
         logging: true,
       }),
     }),
 
     LeadsModule,
+    AuthModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

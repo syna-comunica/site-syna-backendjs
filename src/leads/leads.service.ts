@@ -7,24 +7,32 @@ import { Lead } from './lead.entity';
 export class LeadsService {
   constructor(
     @InjectRepository(Lead)
-    private readonly leadRepository: Repository<Lead>,
+    private readonly repository: Repository<Lead>,
   ) {}
 
   async create(data: Partial<Lead>) {
-    const existing = await this.leadRepository.findOne({
+    const exists = await this.repository.findOne({
       where: { email: data.email },
     });
 
-    if (existing) {
+    if (exists) {
       throw new BadRequestException('Já existe um lead com esse e-mail.');
     }
 
-    const lead = this.leadRepository.create(data);
-    return this.leadRepository.save(lead);
+    const lead = this.repository.create(data);
+
+    try {
+      return await this.repository.save(lead);
+    } catch (err: any) {
+      if (err?.code === '23505') {
+        throw new BadRequestException('Já existe um lead com esse e-mail.');
+      }
+      throw err;
+    }
   }
 
   async findAll() {
-    return this.leadRepository.find({
+    return this.repository.find({
       order: { createdAt: 'DESC' },
     });
   }
